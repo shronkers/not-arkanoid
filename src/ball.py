@@ -1,5 +1,6 @@
 import pygame
-from consts import *
+from consts import BALL_GROUP, BLOCKS_GROUP, PRELOADED_SPRITES
+from consts import HEIGHT, WIDTH
 
 
 class Ball:

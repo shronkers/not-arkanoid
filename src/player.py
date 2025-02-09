@@ -1,4 +1,5 @@
-from consts import *
+import pygame
+from consts import PRELOADED_SPRITES, WIDTH, HEIGHT
 
 
 class Player:

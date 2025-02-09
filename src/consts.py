@@ -1,9 +1,14 @@
 import pygame
 import os
+import sqlite3
+import sys
+
+
+PROGRAM_FOLDER_PATH = "/".join(sys.path[0].split("/"))
 
 
 def load_image(name, colorkey=None):
-	fullname = os.path.join('../assets', name)
+	fullname = os.path.join(f'{PROGRAM_FOLDER_PATH}/../assets', name)
 	# если файл не существует, то выходим
 	if not os.path.isfile(fullname):
 		print(f"Файл с изображением '{fullname}' не найден")
@@ -26,10 +31,19 @@ WIDTH = 800
 HEIGHT = 600
 BLOCKS_GROUP = pygame.sprite.Group()
 BALL_GROUP = pygame.sprite.Group()
-FONT = pygame.font.Font("../assets/font.ttf", size=72)
+FONT = pygame.font.Font(f"{PROGRAM_FOLDER_PATH}/../assets/font.ttf", size=72)
 
 PRELOADED_SPRITES = {
 	"red": load_image("red.png"),
-	"player": load_image("red.png"),
+	"player": load_image("green.png"),
 	"ball": load_image("ball.png")
 }
+
+# score db setup
+SCORE_DB = sqlite3.connect("score.sqlite")
+SCORE_DB.execute("""
+CREATE TABLE IF NOT EXISTS scores (
+	dt INTEGER,
+	score INTEGER
+);
+""")
