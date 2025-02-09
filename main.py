@@ -162,13 +162,10 @@ if __name__ == "__main__":
 				if event.type == pygame.KEYDOWN:
 					if event.key == pygame.K_DOWN:
 						menu.selected_button = (menu.selected_button + 1) % 3
-						print("down", menu.selected_button)
 					if event.key == pygame.K_UP:
 						menu.selected_button = (menu.selected_button - 1) % 3
-						print("up", menu.selected_button)
-					if event.type == pygame.K_RETURN:
+					if event.key == pygame.K_RETURN:
 						in_menu = False
-						print("here")
 		keystate = pygame.key.get_pressed()
 		if in_menu:
 			menu.draw(screen)
