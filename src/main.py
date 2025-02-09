@@ -10,6 +10,8 @@ from consts import FPS, WIDTH, HEIGHT, FONT, SCORE_DB
 from game import Game
 from menu import Menu
 from scoremenu import ScoreMenu
+from levelselect import LevelSelect
+
 
 pygame.display.set_caption("not-arkanoid")
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -20,6 +22,7 @@ if __name__ == "__main__":
 	clock = pygame.time.Clock()
 	in_menu = True
 	score_menu = None
+	level_menu = None
 	game = None
 	menu = Menu()
 
@@ -27,7 +30,6 @@ if __name__ == "__main__":
 	pygame.mixer.music.set_volume(0.1)
 
 	while running:
-		# seconds
 		dt = clock.tick(FPS) / 1000
 		screen.fill("#0e1621")
 		for event in pygame.event.get():
@@ -44,7 +46,8 @@ if __name__ == "__main__":
 					if event.key == pygame.K_RETURN:
 						if menu.selected_button == 0:
 							in_menu = False
-							game = Game(1)
+							level_menu = LevelSelect()
+							enter_pressed = True
 						elif menu.selected_button == 1:
 							running = False
 						else:
@@ -53,14 +56,39 @@ if __name__ == "__main__":
 							score_menu = ScoreMenu()
 							pass
 						pygame.mixer.music.play()
+			if level_menu is not None:
+				if event.type == pygame.KEYDOWN:
+					if event.key == pygame.K_DOWN:
+						level_menu.selected_button = (level_menu.selected_button + 1) % 3
+						pygame.mixer.music.play()
+					if event.key == pygame.K_UP:
+						level_menu.selected_button = (level_menu.selected_button - 1) % 3
+						pygame.mixer.music.play()
+					if event.key == pygame.K_RETURN and not enter_pressed:
+						if level_menu.selected_button == 0:
+							game = Game(1)
+							level_menu = None
+						elif level_menu.selected_button == 1:
+							game = Game(5)
+							level_menu = None
+						else:
+							game = Game(10)
+							level_menu = None
+						pygame.mixer.music.play()
+				if event.type == pygame.KEYUP:
+					enter_pressed = False
 			if event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_ESCAPE:
-					if score_menu is not None:
+					if score_menu is not None or level_menu is not None:
 						score_menu = None
+						level_menu = None
 						in_menu = True
 					elif game is not None:
 						game.paused = not game.paused
 					pygame.mixer.music.play()
+				if event.key == pygame.K_RETURN:
+					if game is not None and game.paused:
+						running = False
 		keystate = pygame.key.get_pressed()
 		if in_menu:
 			menu.draw(screen)
@@ -68,6 +96,10 @@ if __name__ == "__main__":
 			continue
 		if score_menu is not None:
 			score_menu.draw(screen)
+			pygame.display.flip()
+			continue
+		if level_menu is not None:
+			level_menu.draw(screen)
 			pygame.display.flip()
 			continue
 		if game.win_condition:
