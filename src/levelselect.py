@@ -1,6 +1,7 @@
 from consts import FONT
 
 
+# the level select screen
 class LevelSelect:
 	def __init__(self):
 		self.selected_button = 0

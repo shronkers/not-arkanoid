@@ -1,12 +1,14 @@
 from consts import FONT, SCORE_DB
 
 
+# score menu class
 class ScoreMenu:
 	def __init__(self):
 		self.scores = []
 		self.query()
 		pass
 
+	# draws the top 3 scores
 	def draw(self, sc):
 		text_surface = FONT.render("TOP SCORES:", True, "green")
 		sc.blit(text_surface, (10, 10))
@@ -21,6 +23,7 @@ class ScoreMenu:
 			text_surface = FONT.render("no scores yet :(", True, "yellow")
 			sc.blit(text_surface, (10, y_val))
 
+	# queries the SCORE_DB for top scores, saving the top 3
 	def query(self):
 		query = """SELECT date(dt, 'unixepoch'), score
 					FROM scores

@@ -3,6 +3,7 @@ from consts import BALL_GROUP, BLOCKS_GROUP, PRELOADED_SPRITES
 from consts import HEIGHT, WIDTH
 
 
+# the bouncing ball class
 class Ball:
 	def __init__(self, x, y, movespeed):
 		self.x = x
@@ -14,17 +15,22 @@ class Ball:
 		self.sprite.image = PRELOADED_SPRITES["ball"]
 		self.rect = pygame.Rect(x, y, 30, 30)
 		self.sprite.rect = self.rect
+		self.dead = False
 		BALL_GROUP.add(self.sprite)
 
+	# updates the position of the ball's hitbox
 	def update_rect(self):
 		self.rect.left = self.x
 		self.rect.top = self.y
 
+	# updates the ball's position and handles collisions
 	def move(self, dt):
 		self.x += self.vx * dt
 		self.y += self.vy * dt
-		if self.y < 15 or self.y + 15 >= HEIGHT:
+		if self.y < 15:
 			self.vy = -self.vy
+		if self.y + 15 >= HEIGHT:
+			self.dead = True
 		if self.x >= WIDTH - 15 or self.x < 15:
 			self.vx = -self.vx
 		if self.sprite is None:

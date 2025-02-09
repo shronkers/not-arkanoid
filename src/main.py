@@ -2,6 +2,8 @@ import pygame
 import sys
 
 
+# this is needed for font initialization
+# flake8 is angry at me for this but i don't care :D
 pygame.init()
 from consts import PROGRAM_FOLDER_PATH as PFP
 from consts import FPS, WIDTH, HEIGHT, FONT, SCORE_DB
@@ -24,13 +26,16 @@ if __name__ == "__main__":
 	score_menu = None
 	level_menu = None
 	game = None
+	game_clock = None
 	menu = Menu()
 
+	# the bloop
 	pygame.mixer.music.load(f"{PFP}/../assets/bloop.wav")
 	pygame.mixer.music.set_volume(0.1)
 
 	while running:
-		dt = clock.tick(FPS) / 1000
+		# main loop
+		dt = clock.tick(FPS) / 1000  # deltatime in seconds
 		screen.fill("#0e1621")
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
@@ -74,6 +79,7 @@ if __name__ == "__main__":
 						else:
 							game = Game(10)
 							level_menu = None
+						game_clock = 0
 						pygame.mixer.music.play()
 				if event.type == pygame.KEYUP:
 					enter_pressed = False
@@ -88,8 +94,12 @@ if __name__ == "__main__":
 					pygame.mixer.music.play()
 				if event.key == pygame.K_RETURN:
 					if game is not None and game.paused:
-						running = False
+						game = None
+						in_menu = True
 		keystate = pygame.key.get_pressed()
+		if game is not None and game.ball.dead:
+			game = None
+			in_menu = True
 		if in_menu:
 			menu.draw(screen)
 			pygame.display.flip()
@@ -116,7 +126,10 @@ if __name__ == "__main__":
 			game.player.move(-dt)
 		elif keystate[pygame.K_RIGHT]:
 			game.player.move(dt)
-		game.ball.move(dt)
+		if game_clock is not None and game_clock < 144:
+			game_clock += 1
+		else:
+			game.ball.move(dt)
 		game.draw(screen)
 		pygame.display.flip()
 	pygame.display.quit()

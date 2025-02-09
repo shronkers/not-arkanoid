@@ -4,9 +4,13 @@ import sqlite3
 import sys
 
 
+# this module has various constants needed for the game
+
+
 PROGRAM_FOLDER_PATH = "/".join(sys.path[0].split("/"))
 
 
+# function to load image from file
 def load_image(name, colorkey=None):
 	fullname = os.path.join(f'{PROGRAM_FOLDER_PATH}/../assets', name)
 	# если файл не существует, то выходим
@@ -14,7 +18,8 @@ def load_image(name, colorkey=None):
 		print(f"Файл с изображением '{fullname}' не найден")
 		sys.exit()
 	image = pygame.image.load(fullname)
-	"""
+	""" this is commented out because it broke for no reason
+	and it is not needed
 	if colorkey is not None:
 		image = image.convert()
 		if colorkey == -1:

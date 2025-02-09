@@ -2,6 +2,7 @@ import pygame
 from consts import PRELOADED_SPRITES, BLOCKS_GROUP
 
 
+# basic block class, this is the destroyable blocks and the player
 class Block:
 	def __init__(self, br, bc):
 		self.sprite = pygame.sprite.Sprite()

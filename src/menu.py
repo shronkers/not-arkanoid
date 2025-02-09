@@ -2,10 +2,12 @@ import pygame
 from consts import FONT, PRELOADED_SPRITES
 
 
+# main menu class
 class Menu:
 	def __init__(self):
 		self.selected_button = 0
 		self.clock = 0
+		# cat animation frames
 		self.frames = [
 			PRELOADED_SPRITES["frame1"],
 			PRELOADED_SPRITES["frame2"],
@@ -13,6 +15,7 @@ class Menu:
 		]
 		self.current_frame = 0
 
+	# draws the main menu
 	def draw(self, sc: pygame.Surface):
 		draw_colors = [
 			"green" if self.selected_button == x else "red"
@@ -28,6 +31,7 @@ class Menu:
 		text_surface = FONT.render("SCORE", True, draw_colors[2])
 		sc.blit(text_surface, (10, 410))
 
+		# cat animation controlled by a clock
 		self.clock += 1
 		if self.clock == 72:
 			self.clock = 0
