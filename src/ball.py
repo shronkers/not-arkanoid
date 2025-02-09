@@ -35,6 +35,7 @@ class Ball:
 			self.vy = -self.vy
 			if coll.image != PRELOADED_SPRITES["player"]:
 				BLOCKS_GROUP.remove(coll)
+			pygame.mixer.music.play()
 		if coll is None:
 			self.not_colliding = True
 		self.update_rect()

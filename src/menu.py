@@ -1,11 +1,17 @@
 import pygame
-from consts import FONT
+from consts import FONT, PRELOADED_SPRITES
 
 
 class Menu:
 	def __init__(self):
 		self.selected_button = 0
-		pass
+		self.clock = 0
+		self.frames = [
+			PRELOADED_SPRITES["frame1"],
+			PRELOADED_SPRITES["frame2"],
+			PRELOADED_SPRITES["frame3"]
+		]
+		self.current_frame = 0
 
 	def draw(self, sc: pygame.Surface):
 		draw_colors = [
@@ -21,4 +27,9 @@ class Menu:
 		sc.blit(text_surface, (10, 310))
 		text_surface = FONT.render("SCORE", True, draw_colors[2])
 		sc.blit(text_surface, (10, 410))
-		pass
+
+		self.clock += 1
+		if self.clock == 72:
+			self.clock = 0
+			self.current_frame = (self.current_frame + 1) % 3
+		sc.blit(self.frames[self.current_frame], (400, 300))

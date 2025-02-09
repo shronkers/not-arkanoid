@@ -1,13 +1,17 @@
 import pygame
 import sys
+
+
+pygame.init()
+from consts import PROGRAM_FOLDER_PATH as PFP
+from consts import FPS, WIDTH, HEIGHT, FONT, SCORE_DB
+
+
 from game import Game
 from menu import Menu
 from scoremenu import ScoreMenu
 
-
-pygame.init()
 pygame.display.set_caption("not-arkanoid")
-from consts import FPS, WIDTH, HEIGHT, FONT, SCORE_DB
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
 
@@ -16,13 +20,16 @@ if __name__ == "__main__":
 	clock = pygame.time.Clock()
 	in_menu = True
 	score_menu = None
-	game = Game(1)
+	game = None
 	menu = Menu()
+
+	pygame.mixer.music.load(f"{PFP}/../assets/bloop.wav")
+	pygame.mixer.music.set_volume(0.1)
 
 	while running:
 		# seconds
 		dt = clock.tick(FPS) / 1000
-		screen.fill("black")
+		screen.fill("#0e1621")
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				running = False
@@ -30,11 +37,14 @@ if __name__ == "__main__":
 				if event.type == pygame.KEYDOWN:
 					if event.key == pygame.K_DOWN:
 						menu.selected_button = (menu.selected_button + 1) % 3
+						pygame.mixer.music.play()
 					if event.key == pygame.K_UP:
 						menu.selected_button = (menu.selected_button - 1) % 3
+						pygame.mixer.music.play()
 					if event.key == pygame.K_RETURN:
 						if menu.selected_button == 0:
 							in_menu = False
+							game = Game(1)
 						elif menu.selected_button == 1:
 							running = False
 						else:
@@ -42,12 +52,15 @@ if __name__ == "__main__":
 							in_menu = False
 							score_menu = ScoreMenu()
 							pass
+						pygame.mixer.music.play()
 			if event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_ESCAPE:
 					if score_menu is not None:
 						score_menu = None
 						in_menu = True
-					game.paused = not game.paused
+					elif game is not None:
+						game.paused = not game.paused
+					pygame.mixer.music.play()
 		keystate = pygame.key.get_pressed()
 		if in_menu:
 			menu.draw(screen)
@@ -60,7 +73,7 @@ if __name__ == "__main__":
 		if game.win_condition:
 			SCORE_DB.execute(f"INSERT INTO scores VALUES (unixepoch(), {game.score})")
 			SCORE_DB.commit()
-			running = False
+			in_menu = True
 		if game.paused:
 			game.draw(screen)
 			text_surface = FONT.render("PAUSED", True, "white")

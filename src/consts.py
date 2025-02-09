@@ -36,7 +36,10 @@ FONT = pygame.font.Font(f"{PROGRAM_FOLDER_PATH}/../assets/font.ttf", size=72)
 PRELOADED_SPRITES = {
 	"red": load_image("red.png"),
 	"player": load_image("green.png"),
-	"ball": load_image("ball.png")
+	"ball": load_image("ball.png"),
+	"frame1": load_image("frame1.jpg"),
+	"frame2": load_image("frame2.jpg"),
+	"frame3": load_image("frame3.jpg")
 }
 
 # score db setup
